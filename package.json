@@ -1,0 +1,29 @@
+{
+  "name": "metering-station-node",
+  "version": "1.0.0",
+  "description": "Metering station to check air quality",
+  "dependencies": {
+    "agenda": "^0.9.0",
+    "express": "^4.14.1",
+    "node-schedule": "^1.2.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-preset-es2015": "^6.22.0",
+    "eslint": "^3.15.0",
+    "eslint-config-airbnb-base": "^11.1.0",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-promise": "^3.4.2",
+    "eslint-plugin-standard": "^2.0.1",
+    "webpack": "^2.2.1"
+  },
+  "scripts": {
+    "start": "babel-node --presets es2015 src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "plitwinski",
+  "license": "ISC"
+}
