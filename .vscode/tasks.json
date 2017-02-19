@@ -1,13 +1,20 @@
 {
     "version": "0.1.0",
+    "isShellCommand": true,
+    "command": "npm",
     "tasks": [
         {
-            "isShellCommand": true,
-            "command": "npm",
             "args": ["run", "debug-vsc"],
             "taskName": "debug",
             "suppressTaskName": true,
             "isBuildCommand": false,
+            "isBackground": false
+        },
+        {
+            "args": ["run", "build"],
+            "taskName": "build",
+            "suppressTaskName": true,
+            "isBuildCommand": true,
             "isBackground": false
         }
     ]
