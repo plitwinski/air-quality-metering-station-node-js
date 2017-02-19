@@ -1,6 +1,12 @@
-var webpack = require('webpack')
 var path = require('path')
 var nodeExternals = require('webpack-node-externals')
+
+var configExternals = function (context, request, callback) {
+  if (/config.json$/.test(request)) {
+    return callback(null, 'require("./config")')
+  }
+  callback()
+}
 
 module.exports = {
   entry: {
@@ -14,8 +20,7 @@ module.exports = {
   },
   externals: [
     nodeExternals(),
-     { '../config.json': 'require("./config")' },
-     { './config.json': 'require("./config")' }
+    configExternals
   ],
   devtool: 'sourcemap'
 }
