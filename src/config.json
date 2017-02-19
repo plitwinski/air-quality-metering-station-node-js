@@ -1,4 +1,7 @@
 {
+  "webServer":{
+      "port": 8081
+  },
   "devices": [
     {
       "port": "COM3",

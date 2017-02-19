@@ -1,5 +1,6 @@
 import express from 'express'
 import { getReadings } from '../meter/airQualityMeter'
+import config from '../config.json'
 
 const app = express()
 let server = null
@@ -12,7 +13,7 @@ app.get('/v1/readings', (reqest, response) => {
 export const startServer = () => {
   if (server !== null) { return }
 
-  server = app.listen(8080, () => {
+  server = app.listen(config.webServer.port, () => {
     console.log(`Example app listening at http://${server.address().address}:${server.address().port}`)
   })
 }
