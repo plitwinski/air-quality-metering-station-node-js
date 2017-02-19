@@ -4,7 +4,7 @@
         {
             "isShellCommand": true,
             "command": "npm",
-            "args": ["run", "debug"],
+            "args": ["run", "debug-vsc"],
             "taskName": "debug",
             "suppressTaskName": true,
             "isBuildCommand": false,
