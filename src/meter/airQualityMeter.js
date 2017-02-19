@@ -1,3 +1,4 @@
+import config from '../config.json'
 
 export const getReadings = () => {
   return {
@@ -9,5 +10,5 @@ export const getReadings = () => {
 }
 
 export const collectData = () => {
-  console.log('Collecting data')
+  console.log(`Collecting data from ${config.devices[0].name}", port: ${config.devices[0].port}`)
 }
