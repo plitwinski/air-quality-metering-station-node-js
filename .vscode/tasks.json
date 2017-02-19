@@ -1,14 +1,14 @@
 {
     "version": "0.1.0",
-    "command": "${workspaceRoot}/node_modules/.bin/babel",
-    "isShellCommand": true,
     "tasks": [
         {
-            "args": ["src", "--out-dir", "lib", "-w", "--source-maps"],
-            "taskName": "transpile-debug",
+            "isShellCommand": true,
+            "command": "npm",
+            "args": ["run", "debug"],
+            "taskName": "debug",
             "suppressTaskName": true,
-            "isBuildCommand": true,
-            "isBackground": true
+            "isBuildCommand": false,
+            "isBackground": false
         }
     ]
 }

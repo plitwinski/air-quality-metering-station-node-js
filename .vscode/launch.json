@@ -9,7 +9,7 @@
             "stopOnEntry": false,
             "args": [],
             "cwd": "${workspaceRoot}",
-            "preLaunchTask": "copy-config",
+            "preLaunchTask": "debug",
             "runtimeExecutable": null,
             "runtimeArgs": [ "--nolazy" ],
             "env": {
