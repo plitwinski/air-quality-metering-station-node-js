@@ -17,9 +17,9 @@ var deleteFolderRecursive = function (path) {
   }
 }
 
-console.log('Removing "build" directory')
+console.log('> Removing "build" directory')
 deleteFolderRecursive('build')
-console.log('"build" directory removed')
+console.log('> "build" directory removed')
 
 webpack(webpackConfig, function (err) {
   if (err) {

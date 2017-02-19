@@ -11,7 +11,6 @@ var configExternals = function (context, request, callback) {
 module.exports = {
   entry: {
     airQualityMeteringStation: './src/index.js'
-    // config: './src/config.js'
   },
   target: 'node',
   output: {

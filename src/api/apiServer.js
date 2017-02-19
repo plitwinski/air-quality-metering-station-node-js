@@ -14,7 +14,7 @@ export const startServer = () => {
   if (server !== null) { return }
 
   server = app.listen(config.webServer.port, () => {
-    console.log(`Example app listening at http://${server.address().address}:${server.address().port}`)
+    console.log(`Example app listening at port ${server.address().port}`)
   })
 }
 
