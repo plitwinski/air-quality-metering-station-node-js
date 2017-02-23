@@ -1,12 +1,12 @@
 import express from 'express'
-import { getReadings } from '../meter/airQualityMeter'
+import { airQualityMeter } from '../meter/airQualityMeter'
 import config from '../config.json'
 
 const app = express()
 let server = null
 
 app.get('/v1/readings', (reqest, response) => {
-  const readings = getReadings()
+  const readings = airQualityMeter.getReadings()
   response.end(JSON.stringify(readings))
 })
 

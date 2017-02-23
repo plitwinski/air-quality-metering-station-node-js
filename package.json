@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "Metering station to monitor air quality",
   "dependencies": {
+    "es-collections": "0.0.2",
     "express": "^4.14.1",
-    "node-schedule": "^1.2.0"
+    "node-schedule": "^1.2.0",
+    "serialport": "^4.0.7"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
