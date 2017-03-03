@@ -1,5 +1,7 @@
 import SerialPort from 'serialport'
 
+import { delay } from '../../../utils/asyncHelpers'
+
 import { SerialStart, SerialEnd, SendByte, CommandTerminator } from './sdsConsts'
 import { WorkState, DutyCycle } from './commandTypes'
 import { createResumeCommand, createPauseCommand } from './sdsCommand'
@@ -26,28 +28,25 @@ export class SdsSensor {
       return
     }
     const that = this
-    port.open((err) => {
+    port.open(async (err) => {
       if (err) {
         throw new Error(err)
       }
       console.log('Port open!!!')
-      setTimeout(() => {
-        that.resume()
-        port.on('data', data => {
-          that.getReading(data, callback)
-          that.handleCommandResponse()
-        })
-      }, 500)
+      await delay(500)
+      that.resume()
+      port.on('data', data => {
+        that.getReading(data, callback)
+        that.handleCommandResponse()
+      })
     })
   }
 
-  stop () {
-    const that = this
-    this.pause(() => {
-      if (that._port.isOpen()) {
-        that._port.close()
-      }
-    })
+  async stopAsync () {
+    await this.pauseAsync()
+    if (this._port.isOpen()) {
+      this._port.close()
+    }
   }
 
   resume () {
@@ -58,22 +57,17 @@ export class SdsSensor {
     }
   }
 
-  pause (callback) {
-    if (this._isRunning) {
-      this.sendCommand(createPauseCommand())
-      console.log('Paused!!!!!!!!!')
-      const that = this
-      setTimeout(() => {
+  async pauseAsync (callback) {
+    const that = this
+    return new Promise(async (resolve) => {
+      if (this._isRunning) {
+        that.sendCommand(createPauseCommand())
+        console.log('Paused!!!!!!!!!')
+        await delay(500)
         that._isRunning = false
-        if (callback) {
-          callback()
-        }
-      }, 500)
-    } else {
-      if (callback) {
-        callback()
       }
-    }
+      resolve()
+    })
   }
 
   handleCommandResponse () {

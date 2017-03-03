@@ -1,6 +1,7 @@
 
 import config from '../config.json'
 import { SdsSensor } from './sensors/sds011/sdsSensor'
+import { delay } from '../utils/asyncHelpers'
 
 class AirQualityMeter {
   constructor () {
@@ -40,7 +41,7 @@ class AirQualityMeter {
     })
   }
 
-  collectReadings () {
+  async collectReadingsAsync () {
     const that = this
     this._isCollectingData = true
     this._collectedReadings.map(item => { item.readings = [] })
@@ -50,15 +51,13 @@ class AirQualityMeter {
         deviceReadings.readings.push(reading)
       }
     }))
-    setTimeout(() => {
-      that._isReadyToReceiveReadings = true
-      setTimeout(() => {
-        that._isReadyToReceiveReadings = false
-        that._sensors.map(sensor => sensor.stop())
-        that._isCollectingData = false
-        that._results = that._getResults()
-      }, 60000)
-    }, 60000)
+    await delay(60000)
+    this._isReadyToReceiveReadings = true
+    await delay(60000)
+    this._isReadyToReceiveReadings = false
+    this._sensors.map(sensor => sensor.stopAsync())
+    this._isCollectingData = false
+    this._results = this._getResults()
   }
 }
 
