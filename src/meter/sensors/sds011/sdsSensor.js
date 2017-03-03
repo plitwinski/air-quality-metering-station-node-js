@@ -26,39 +26,53 @@ export class SdsSensor {
       return
     }
     const that = this
-    console.log('Opening port!')
     port.open((err) => {
       if (err) {
         throw new Error(err)
       }
       console.log('Port open!!!')
-      that.resume()
-      port.on('data', data => {
-        that.getReading(data, callback)
-        that.handleCommandResponse()
-      })
+      setTimeout(() => {
+        that.resume()
+        port.on('data', data => {
+          that.getReading(data, callback)
+          that.handleCommandResponse()
+        })
+      }, 500)
     })
   }
 
   stop () {
-    this.pause()
-    if (this._port.isOpen()) {
-      this._port.close()
-    }
+    const that = this
+    this.pause(() => {
+      if (that._port.isOpen()) {
+        that._port.close()
+      }
+    })
   }
 
   resume () {
     if (!this._isRunning) {
+      console.log('Resume!!!!!!!!!')
       this.sendCommand(createResumeCommand())
       this._isRunning = true
     }
   }
 
-  pause () {
+  pause (callback) {
     if (this._isRunning) {
       this.sendCommand(createPauseCommand())
+      console.log('Paused!!!!!!!!!')
       const that = this
-      setTimeout(() => { that._isRunning = false }, 500)
+      setTimeout(() => {
+        that._isRunning = false
+        if (callback) {
+          callback()
+        }
+      }, 500)
+    } else {
+      if (callback) {
+        callback()
+      }
     }
   }
 
@@ -92,7 +106,7 @@ export class SdsSensor {
     bufferArray.push(command.commandType)
     const commandDefaultData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     commandDefaultData.map((defaultValue, index) => {
-      if (command.data.legth > index) {
+      if (command.data.length > index) {
         bufferArray.push(command.data[index])
       } else {
         bufferArray.push(defaultValue)
@@ -105,7 +119,11 @@ export class SdsSensor {
     bufferArray.push(SerialEnd)
 
     const buffer = Buffer.from(bufferArray)
-    //this._port.write(buffer, (err) => { throw new Error(err) })
+    this._port.write(buffer, (err, asdsad) => {
+      if (err) {
+        throw new Error(err)
+      }
+    })
   }
 
   generateCrc (commandData) {

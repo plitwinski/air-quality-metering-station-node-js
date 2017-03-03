@@ -1,8 +1,6 @@
-import { Queue } from 'es-collections'
 
 import config from '../config.json'
 import { SdsSensor } from './sensors/sds011/sdsSensor'
-
 
 class AirQualityMeter {
   constructor () {
@@ -12,7 +10,7 @@ class AirQualityMeter {
     this._results = this._sensors.map(device => ({ name: device.getDeviceName(), PM25: -1, PM10: -1 }))
     this._collectedReadings = this._sensors.map(sensor => ({
       name: sensor.getDeviceName(),
-      readings: new Queue()
+      readings: []
     }))
   }
 
@@ -32,8 +30,8 @@ class AirQualityMeter {
         avgPM25 = avgPM25 + item.PM25
         avgPM10 = avgPM10 + item.PM10
       })
-      avgPM25 = avgPM25 / sensorReading.readings.size
-      avgPM10 = avgPM10 / sensorReading.readings.size
+      avgPM25 = avgPM25 / sensorReading.readings.length
+      avgPM10 = avgPM10 / sensorReading.readings.length
       return {
         deviceName: sensorReading.name,
         PM25: avgPM25,
@@ -45,19 +43,21 @@ class AirQualityMeter {
   collectReadings () {
     const that = this
     this._isCollectingData = true
-    this._collectedReadings.map(item => item.readings.clear())
+    this._collectedReadings.map(item => { item.readings = [] })
     this._sensors.map(sensor => sensor.start(reading => {
       if (that._isReadyToReceiveReadings) {
         const deviceReadings = that._collectedReadings.filter(item => item.name === sensor.getDeviceName())[0]
-        deviceReadings.readings.enqueue(reading)
+        deviceReadings.readings.push(reading)
       }
     }))
-    setTimeout(() => { that._isReadyToReceiveReadings = true }, 60000)
     setTimeout(() => {
-      that._isReadyToReceiveReadings = false
-      that._sensors.map(sensor => sensor.stop())
-      that._isCollectingData = false
-      that._results = that._getResults()
+      that._isReadyToReceiveReadings = true
+      setTimeout(() => {
+        that._isReadyToReceiveReadings = false
+        that._sensors.map(sensor => sensor.stop())
+        that._isCollectingData = false
+        that._results = that._getResults()
+      }, 60000)
     }, 60000)
   }
 }

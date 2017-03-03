@@ -7,7 +7,7 @@ let job = null
 export const startScheduler = () => {
   if (job !== null) { return }
   console.log('Start collecting data')
-  //job = scheduler.scheduleJob('*/10 * * * * ', () => airQualityMeter.collectReadings())
+  job = scheduler.scheduleJob('*/10 * * * *', () => airQualityMeter.collectReadings())
   airQualityMeter.collectReadings()
 }
 
