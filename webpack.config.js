@@ -21,5 +21,17 @@ module.exports = {
     nodeExternals(),
     configExternals
   ],
-  devtool: 'sourcemap'
+  devtool: 'sourcemap',
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015']
+        }
+      }
+    ]
+  }
 }

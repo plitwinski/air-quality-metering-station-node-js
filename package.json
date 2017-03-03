@@ -30,7 +30,6 @@
     "webpack-node-externals": "^1.5.4"
   },
   "scripts": {
-    "start": "babel-node --presets es2015 src/index.js",
     "build": "node scripts/build.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug-vsc": "node_modules/.bin/babel src --out-dir lib --source-maps && copy /Y src\\config.json lib\\config.json"
