@@ -25,14 +25,8 @@ class AirQualityMeter {
 
   _getResults () {
     return this._collectedReadings.map(sensorReading => {
-      let avgPM25 = 0
-      let avgPM10 = 0
-      sensorReading.readings.forEach(item => {
-        avgPM25 = avgPM25 + item.PM25
-        avgPM10 = avgPM10 + item.PM10
-      })
-      avgPM25 = avgPM25 / sensorReading.readings.length
-      avgPM10 = avgPM10 / sensorReading.readings.length
+      const avgPM25 = sensorReading.readings.map(p => p.PM25).reduce((a, b) => a + b, 0) / sensorReading.readings.length
+      const avgPM10 = sensorReading.readings.map(p => p.PM10).reduce((a, b) => a + b, 0) / sensorReading.readings.length
       return {
         deviceName: sensorReading.name,
         PM25: avgPM25,
