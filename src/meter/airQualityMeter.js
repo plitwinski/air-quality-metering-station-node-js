@@ -29,8 +29,8 @@ class AirQualityMeter {
       const avgPM10 = sensorReading.readings.map(p => p.PM10).reduce((a, b) => a + b, 0) / sensorReading.readings.length
       return {
         deviceName: sensorReading.name,
-        PM25: avgPM25,
-        PM10: avgPM10
+        PM25: Math.round(avgPM25),
+        PM10: Math.round(avgPM10)
       }
     })
   }
