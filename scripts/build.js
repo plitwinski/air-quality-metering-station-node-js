@@ -37,10 +37,10 @@ webpack(webpackConfig, function (err) {
     }
     console.log(data)
     fs.unlinkSync('build/package.json')
-    if(buildType === '--arm') {
+    if (buildType === '--arm') {
       console.log('> Copying linux ARM copiled natives')
       deleteFolderRecursively('build/node_modules/serialport/build/Release')
-      cmd.get('mkdir build\\node_modules\\serialport\\build\\Release && xcopy /S /Y dependencies\\linux\\arm build\\node_modules\\serialport\\build\\Release', function (data, err) {
+      cmd.get('mkdir build\\node_modules\\serialport\\build\\Release && xcopy /S /Y dependencies\\linux\\arm\\serialport build\\node_modules\\serialport\\build\\Release', function (data, err) {
         if (err) {
           throw Error(err)
         }
