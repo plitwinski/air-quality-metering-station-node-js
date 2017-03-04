@@ -3,6 +3,8 @@ var webpackConfig = require('../webpack.config')
 var cmd = require('node-cmd')
 var fs = require('fs')
 
+var buildType = process.argv.length > 2 ? process.argv[2] : null
+
 var deleteFolderRecursively = function (path) {
   if (fs.existsSync(path)) {
     fs.readdirSync(path).forEach(function (file, index) {
@@ -35,15 +37,19 @@ webpack(webpackConfig, function (err) {
     }
     console.log(data)
     fs.unlinkSync('build/package.json')
-    console.log('> Copying linux ARM copiled natives')
-    deleteFolderRecursively('build/node_modules/serialport/build/Release')
-    cmd.get('mkdir build\\node_modules\\serialport\\build\\Release && xcopy /S /Y dependencies\\linux\\arm build\\node_modules\\serialport\\build\\Release', function (data, err) {
+    if(buildType === '--arm') {
+      console.log('> Copying linux ARM copiled natives')
+      deleteFolderRecursively('build/node_modules/serialport/build/Release')
+      cmd.get('mkdir build\\node_modules\\serialport\\build\\Release && xcopy /S /Y dependencies\\linux\\arm build\\node_modules\\serialport\\build\\Release', function (data, err) {
         if (err) {
           throw Error(err)
         }
         console.log(data)
         console.log('> Completed')
       })
+    } else {
+      console.log('> Completed')
+    }
   })
 })
 
