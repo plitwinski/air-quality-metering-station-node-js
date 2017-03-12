@@ -1,6 +1,14 @@
 {
   "webServer":{
-      "port": 8080
+    "port": 8080
+  },
+  "awsIoT": {
+    "region": "eu-west-1",
+    "clientId": "7f625694-8f69-4060-a9ee-952fde2f5b2d",
+    "keyPath": "certificates/8467b42cb9-private.pem.key",
+    "certPath": "certificates/8467b42cb9-certificate.pem.crt",
+    "caPath": "certificates/CA_AWS_IoT.crt",
+    "location": "London" 
   },
   "devices": [
     {
