@@ -3,6 +3,9 @@ import config from '../config.json'
 import { SdsSensor } from './sensors/sds011/sdsSensor'
 import { delay } from '../utils/asyncHelpers'
 
+import eventAggregator from '../events/eventAggregator'
+import { PM_READING_STARTED, PM_READING_FINISHED } from '../events/eventConstants'
+
 class AirQualityMeter {
   constructor () {
     this._isCollectingData = false
@@ -36,6 +39,7 @@ class AirQualityMeter {
   }
 
   async collectReadingsAsync () {
+    eventAggregator.emit(PM_READING_STARTED)
     const that = this
     this._isCollectingData = true
     this._collectedReadings.map(item => { item.readings = [] })
@@ -52,6 +56,7 @@ class AirQualityMeter {
     this._sensors.map(sensor => sensor.stopAsync())
     this._isCollectingData = false
     this._results = this._getResults()
+    eventAggregator.emit(PM_READING_FINISHED, this._results)
   }
 }
 
