@@ -6,7 +6,8 @@ import eventAggregator from '../events/eventAggregator'
 import { PM_READING_STARTED, PM_READING_FINISHED } from '../events/eventConstants'
 
 const appRoot = path.dirname(require.main.filename)
-const topicName = 'pm_reading'
+const topicName = config.awsIoT.topicName
+
 const device = awsIoT.device({
   keyPath: path.resolve(appRoot, config.awsIoT.keyPath),
   certPath: path.resolve(appRoot, config.awsIoT.certPath),
@@ -23,30 +24,27 @@ device.on('connect', () => {
 })
 
 device.on('error', (error) => console.log('error', error))
-device.on('close', () => console.log('close'))
-device.on('reconnect', () => console.log('reconnect'))
-device.on('offline', () => console.log('offline'))
-device.on('message', (topic, payload) => console.log('message', topic, payload.toString()))
+
 const readingStarted = () => console.log('Reading started')
 
 const readingFinished = (readings) => {
-  console.log('results arrived: ', JSON.stringify(readings))
-  console.log('is device connected to AWS IoT: ', isConnected)
   if (isConnected) {
     readings.forEach((reading) => {
       const data = {
         deviceType: reading.deviceName,
         'PM2.5': reading.PM25,
         PM10: reading.PM10,
-        location: config.awsIoT.location
+        localTime: new Date()
       }
 
-      device.publish(topicName, JSON.stringify(data), {qos: 0, retain: false}, (err) => {
-        if (err) {
-          console.log('ERROR!!!!', err)
-        }
-      })
+      if (config.awsIoT.location) {
+        data.location = config.awsIoT.location
+      }
+
+      device.publish(topicName, JSON.stringify(data))
     })
+  } else {
+    console.log('Could not send data to IoT - no connection')
   }
 }
 
