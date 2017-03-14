@@ -30,26 +30,39 @@ webpack(webpackConfig, function (err) {
   console.log('> Webpack finished')
   console.log('> Restoring packages')
   fs.createReadStream('package.json').pipe(fs.createWriteStream('build/package.json'))
-  fs.createReadStream('src/config.json').pipe(fs.createWriteStream('build/config.json'))
+  if (buildType === '--arm') {
+    fs.createReadStream('linux_configs/config.json').pipe(fs.createWriteStream('build/config.json'))
+  } else {
+    fs.createReadStream('src/config.json').pipe(fs.createWriteStream('build/config.json'))
+  }
   cmd.get('cd build && npm install --production', function (data, err) {
     if (err) {
       throw Error(err)
     }
     console.log(data)
     fs.unlinkSync('build/package.json')
-    if (buildType === '--arm') {
-      console.log('> Copying linux ARM copiled natives')
-      deleteFolderRecursively('build/node_modules/serialport/build/Release')
-      cmd.get('mkdir build\\node_modules\\serialport\\build\\Release && xcopy /S /Y dependencies\\linux\\arm\\serialport build\\node_modules\\serialport\\build\\Release', function (data, err) {
-        if (err) {
-          throw Error(err)
-        }
-        console.log(data)
+
+    console.log('> Copying certificates')
+    cmd.get('mkdir build\\certificates && xcopy /S /Y certificates build\\certificates', function (data, err) {
+      if (err) {
+        throw Error(err)
+      }
+      console.log(data)
+
+      if (buildType === '--arm') {
+        console.log('> Copying linux ARM copiled natives')
+        deleteFolderRecursively('build/node_modules/serialport/build/Release')
+        cmd.get('mkdir build\\node_modules\\serialport\\build\\Release && xcopy /S /Y dependencies\\linux\\arm\\serialport build\\node_modules\\serialport\\build\\Release', function (data, err) {
+          if (err) {
+            throw Error(err)
+          }
+          console.log(data)
+          console.log('> Completed')
+        })
+      } else {
         console.log('> Completed')
-      })
-    } else {
-      console.log('> Completed')
-    }
+      }
+    })
   })
 })
 
