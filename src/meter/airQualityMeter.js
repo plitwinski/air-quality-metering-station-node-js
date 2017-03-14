@@ -39,7 +39,7 @@ class AirQualityMeter {
   }
 
   async collectReadingsAsync () {
-    if (this._isCollectingData) { return }
+    if (this._isCollectingData === true) { return }
 
     eventAggregator.emit(PM_READING_STARTED)
     const that = this
