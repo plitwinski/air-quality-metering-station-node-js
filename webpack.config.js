@@ -10,12 +10,17 @@ var configExternals = function (context, request, callback) {
 
 module.exports = {
   entry: {
-    airQualityMeteringStation: './src/index.js'
+    index: './src/index.js',
+    monitor: './src/monitor.js'
   },
   target: 'node',
   output: {
     path: path.join(__dirname, 'build'),
     filename: '[name].js'
+  },
+  context: __dirname,
+  node: {
+    __dirname: false
   },
   externals: [
     nodeExternals(),

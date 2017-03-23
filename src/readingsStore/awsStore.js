@@ -13,14 +13,14 @@ const device = awsIoT.device({
   keyPath: path.resolve(appRoot, config.awsIoT.keyPath),
   certPath: path.resolve(appRoot, config.awsIoT.certPath),
   caPath: path.resolve(appRoot, config.awsIoT.caPath),
-  clientId:`air-quality-metering-station_${config.awsIoT.clientId}`,
+  clientId: `air-quality-metering-station_${config.awsIoT.clientId}`,
   region: config.awsIoT.region
 })
 
 let isConnected = false
 
 device.on('connect', () => {
-  console.log('Device connected to AWS IoT')
+  console.log(`${(new Date()).toUTCString()} Device connected to AWS IoT`)
   isConnected = true
 })
 
@@ -40,11 +40,10 @@ const readingFinished = (readings) => {
         localTime: new Date(),
         clientId: config.awsIoT.clientId
       }
-
       device.publish(topicName, JSON.stringify(data))
     })
   } else {
-    console.log('Could not send data to IoT - no connection')
+    console.log(`${(new Date()).toUTCString()} Could not send data to IoT - no connection`)
   }
 }
 
@@ -54,7 +53,7 @@ export const startListening = () => {
 }
 
 export const stopListening = () => {
-  console.log('Unregistering AWS IoT PM listening')
+  console.log(`${(new Date()).toUTCString()} Unregistering AWS IoT PM listening`)
   eventAggregator.removeListener(PM_READING_STARTED, readingStarted)
   eventAggregator.removeListener(PM_READING_FINISHED, readingFinished)
 }

@@ -32,7 +32,7 @@ export class SdsSensor {
       if (err) {
         throw new Error(err)
       }
-      console.log('Port open!!!')
+      console.log(`${(new Date()).toUTCString()} Port open!!!`)
       await delay(500)
       that.resume()
       port.on('data', data => {
@@ -51,7 +51,7 @@ export class SdsSensor {
 
   resume () {
     if (!this._isRunning) {
-      console.log('Resume!!!!!!!!!')
+      console.log(`${(new Date()).toUTCString()} Resume!!!!!!!!!`)
       this.sendCommand(createResumeCommand())
       this._isRunning = true
     }
@@ -62,7 +62,7 @@ export class SdsSensor {
     return new Promise(async (resolve) => {
       if (this._isRunning) {
         that.sendCommand(createPauseCommand())
-        console.log('Paused!!!!!!!!!')
+        console.log(`${(new Date()).toUTCString()} Paused!!!!!!!!!`)
         await delay(500)
         that._isRunning = false
       }
@@ -82,7 +82,6 @@ export class SdsSensor {
         PM25: (data[2] | (data[3] << 8)) / 10,
         PM10: (data[4] | (data[5] << 8)) / 10
       }
-      console.log(`CollectedData - PM2.5: ${reading.PM25} , PM10: ${reading.PM10}`)
       readingCallback(reading)
     }
   }
@@ -137,7 +136,7 @@ export class SdsSensor {
 
   validateByte (data, index, possibleValues) {
     if (possibleValues.indexOf(data[index]) === -1) {
-      throw new Error(`Cannot generate command crc - ${index} element with value ${data[index]} cannot be found in possible values ${possibleValues.map(p => p.toString())}`)
+      throw new Error(`${(new Date()).toUTCString()} Cannot generate command crc - ${index} element with value ${data[index]} cannot be found in possible values ${possibleValues.map(p => p.toString())}`)
     }
   }
 }
