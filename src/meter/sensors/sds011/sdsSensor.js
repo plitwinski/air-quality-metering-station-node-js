@@ -30,6 +30,7 @@ export class SdsSensor {
     const that = this
     port.open(async (err) => {
       if (err) {
+        console.log(`${(new Date()).toUTCString()} ERROR: Cannot open port: ${err}`)
         throw new Error(err)
       }
       console.log(`${(new Date()).toUTCString()} Port open!!!`)
@@ -114,6 +115,7 @@ export class SdsSensor {
     const buffer = Buffer.from(bufferArray)
     this._port.write(buffer, (err, asdsad) => {
       if (err) {
+        console.log(`${(new Date()).toUTCString()} ERROR: Cannot write to port: ${err}`)
         throw new Error(err)
       }
     })
