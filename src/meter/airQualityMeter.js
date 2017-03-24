@@ -55,7 +55,7 @@ class AirQualityMeter {
     this._isReadyToReceiveReadings = true
     await delay(60000)
     this._isReadyToReceiveReadings = false
-    this._sensors.map(sensor => sensor.stopAsync())
+    this._sensors.map(async sensor => await sensor.stopAsync())
     this._results = this._getResults()
     this._isCollectingData = false
     eventAggregator.emit(PM_READING_FINISHED, this._results)

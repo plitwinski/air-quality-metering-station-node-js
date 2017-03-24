@@ -34,7 +34,7 @@ export class SdsSensor {
       }
       console.log(`${(new Date()).toUTCString()} Port open!!!`)
       await delay(800)
-      await that.resume()
+      await that.resumeAsync()
       port.on('data', data => {
         that.getReading(data, callback)
         that.handleCommandResponse()
@@ -49,7 +49,7 @@ export class SdsSensor {
     }
   }
 
-  async resume () {
+  async resumeAsync () {
     if (!this._isRunning) {
       console.log(`${(new Date()).toUTCString()} Resume!!!!!!!!!`)
       await this.sendCommand(createResumeCommand())
