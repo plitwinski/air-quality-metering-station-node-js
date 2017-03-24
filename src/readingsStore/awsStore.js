@@ -52,8 +52,9 @@ export const startListening = () => {
   eventAggregator.on(PM_READING_FINISHED, readingFinished)
 }
 
-export const stopListening = () => {
+export const stopListening = async () => {
   console.log(`${(new Date()).toUTCString()} Unregistering AWS IoT PM listening`)
   eventAggregator.removeListener(PM_READING_STARTED, readingStarted)
   eventAggregator.removeListener(PM_READING_FINISHED, readingFinished)
+  await device.end(true)
 }

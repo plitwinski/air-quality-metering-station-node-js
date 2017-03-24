@@ -30,12 +30,11 @@ export class SdsSensor {
     const that = this
     port.open(async (err) => {
       if (err) {
-        console.log(`${(new Date()).toUTCString()} ERROR: Cannot open port: ${err}`)
         throw new Error(err)
       }
       console.log(`${(new Date()).toUTCString()} Port open!!!`)
-      await delay(500)
-      that.resume()
+      await delay(800)
+      await that.resume()
       port.on('data', data => {
         that.getReading(data, callback)
         that.handleCommandResponse()
@@ -50,10 +49,10 @@ export class SdsSensor {
     }
   }
 
-  resume () {
+  async resume () {
     if (!this._isRunning) {
       console.log(`${(new Date()).toUTCString()} Resume!!!!!!!!!`)
-      this.sendCommand(createResumeCommand())
+      await this.sendCommand(createResumeCommand())
       this._isRunning = true
     }
   }
@@ -62,9 +61,8 @@ export class SdsSensor {
     const that = this
     return new Promise(async (resolve) => {
       if (this._isRunning) {
-        that.sendCommand(createPauseCommand())
+        await that.sendCommand(createPauseCommand())
         console.log(`${(new Date()).toUTCString()} Paused!!!!!!!!!`)
-        await delay(500)
         that._isRunning = false
       }
       resolve()
@@ -94,30 +92,33 @@ export class SdsSensor {
   }
 
   sendCommand (command) {
-    const bufferArray = []
-    bufferArray.push(SerialStart)
-    bufferArray.push(SendByte)
-    bufferArray.push(command.commandType)
-    const commandDefaultData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    commandDefaultData.map((defaultValue, index) => {
-      if (command.data.length > index) {
-        bufferArray.push(command.data[index])
-      } else {
-        bufferArray.push(defaultValue)
-      }
-    })
+    return new Promise((resolve, reject) => {
+      const bufferArray = []
+      bufferArray.push(SerialStart)
+      bufferArray.push(SendByte)
+      bufferArray.push(command.commandType)
+      const commandDefaultData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      commandDefaultData.map((defaultValue, index) => {
+        if (command.data.length > index) {
+          bufferArray.push(command.data[index])
+        } else {
+          bufferArray.push(defaultValue)
+        }
+      })
 
-    bufferArray.push(CommandTerminator)
-    bufferArray.push(CommandTerminator)
-    bufferArray.push(this.generateCrc(bufferArray))
-    bufferArray.push(SerialEnd)
+      bufferArray.push(CommandTerminator)
+      bufferArray.push(CommandTerminator)
+      bufferArray.push(this.generateCrc(bufferArray))
+      bufferArray.push(SerialEnd)
 
-    const buffer = Buffer.from(bufferArray)
-    this._port.write(buffer, (err, asdsad) => {
-      if (err) {
-        console.log(`${(new Date()).toUTCString()} ERROR: Cannot write to port: ${err}`)
-        throw new Error(err)
-      }
+      const buffer = Buffer.from(bufferArray)
+      console.log(`${(new Date()).toUTCString()} Writing to port (data: ${JSON.stringify(bufferArray)})`)
+      this._port.write(buffer, (err) => {
+        resolve()
+        if (err) {
+          reject(err)
+        }
+      })
     })
   }
 
