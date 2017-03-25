@@ -28,16 +28,17 @@ export class SdsSensor {
       return
     }
     const that = this
+    console.log(`${(new Date()).toUTCString()} Opening port`)
     port.open(async (err) => {
       if (err) {
         throw new Error(err)
       }
-      console.log(`${(new Date()).toUTCString()} Port open!!!`)
+      console.log(`${(new Date()).toUTCString()} Port opened`)
       await delay(800)
       await that.resumeAsync()
       port.on('data', data => {
         that.getReading(data, callback)
-        that.handleCommandResponse()
+        that.handleCommandResponse(data)
       })
     })
   }
@@ -45,15 +46,26 @@ export class SdsSensor {
   async stopAsync () {
     await this.pauseAsync()
     if (this._port.isOpen()) {
+      console.log(`${(new Date()).toUTCString()} Closing port`)
       this._port.close()
+      console.log(`${(new Date()).toUTCString()} Port closed`)
+    } else {
+      console.log(`${(new Date()).toUTCString()} Trying to close closed port`)
     }
   }
 
   async resumeAsync () {
     if (!this._isRunning) {
-      console.log(`${(new Date()).toUTCString()} Resume!!!!!!!!!`)
-      await this.sendCommand(createResumeCommand())
+      try {
+        console.log(`${(new Date()).toUTCString()} Sending start command`)
+        await this.sendCommand(createResumeCommand())
+        console.log(`${(new Date()).toUTCString()} Reading started`)
+      } catch (err) {
+        console.log(`ERROR: ${(new Date()).toUTCString()} Cannot write to port (on resume): ${err.message}`)
+      }
       this._isRunning = true
+    } else {
+      console.log(`${(new Date()).toUTCString()} Resume called on running device`)
     }
   }
 
@@ -61,17 +73,23 @@ export class SdsSensor {
     const that = this
     return new Promise(async (resolve) => {
       if (this._isRunning) {
-        await that.sendCommand(createPauseCommand())
-        console.log(`${(new Date()).toUTCString()} Paused!!!!!!!!!`)
+        try {
+          console.log(`${(new Date()).toUTCString()} Sending pause command`)
+          await that.sendCommand(createPauseCommand())
+          console.log(`${(new Date()).toUTCString()} Paused`)
+        } catch (err) {
+          console.log(`ERROR: ${(new Date()).toUTCString()} Cannot write to port (on pause): ${err.message}`)
+        }
         that._isRunning = false
       }
       resolve()
     })
   }
 
-  handleCommandResponse () {
+  handleCommandResponse (data) {
     if (!this._isRunning) {
       this._isRunning = true
+      console.log(`${(new Date()).toUTCString()} inactive response - ${JSON.stringify(data)}`)
     }
   }
 

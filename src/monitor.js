@@ -15,4 +15,5 @@ appliance.on('exit', function () {
   appliance.restart()
 })
 
+appliance.on('restart', () => console.log(`${(new Date()).toUTCString()}  Restarting script for ${appliance.times} time`))
 appliance.start()
