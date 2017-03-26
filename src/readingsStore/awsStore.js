@@ -32,7 +32,6 @@ const readingFinished = (readings) => {
   if (isConnected) {
     readings.forEach((reading) => {
       const data = {
-        id: uuid.v4(),
         deviceType: reading.deviceName,
         'PM2.5': reading.PM25,
         PM10: reading.PM10,
