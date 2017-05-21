@@ -2,6 +2,10 @@ jest.mock('../../../utils/asyncHelpers', () => ({
   delay: (timeout) => Promise.resolve()
 }))
 
+jest.mock('../../../utils/consoleLogger', () => ({
+  log: (msg) => {}
+}))
+
 jest.mock('serialport', () => require('../../../../test/utils/fakeSerialPort'))
 
 import { SdsSensor } from './sdsSensor'

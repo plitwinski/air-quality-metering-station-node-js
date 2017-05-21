@@ -1,6 +1,7 @@
 import SerialPort from 'serialport'
 
 import { delay } from '../../../utils/asyncHelpers'
+import { log } from '../../../utils/consoleLogger'
 
 import { SerialStart, SerialEnd, SendByte, CommandTerminator } from './sdsConsts'
 import { WorkState, DutyCycle } from './commandTypes'
@@ -28,12 +29,12 @@ export class SdsSensor {
       return
     }
     const that = this
-    console.log(`${(new Date()).toUTCString()} Opening port`)
+    log(`${(new Date()).toUTCString()} Opening port`)
     port.open(async (err) => {
       if (err) {
         throw new Error(err)
       }
-      console.log(`${(new Date()).toUTCString()} Port opened`)
+      log(`${(new Date()).toUTCString()} Port opened`)
       await delay(800)
       await that.resumeAsync()
 
@@ -47,26 +48,26 @@ export class SdsSensor {
   async stopAsync () {
     await this.pauseAsync()
     if (this._port.isOpen()) {
-      console.log(`${(new Date()).toUTCString()} Closing port`)
+      log(`${(new Date()).toUTCString()} Closing port`)
       this._port.close()
-      console.log(`${(new Date()).toUTCString()} Port closed`)
+      log(`${(new Date()).toUTCString()} Port closed`)
     } else {
-      console.log(`${(new Date()).toUTCString()} Trying to close closed port`)
+      log(`${(new Date()).toUTCString()} Trying to close closed port`)
     }
   }
 
   async resumeAsync () {
     if (!this._isRunning) {
       try {
-        console.log(`${(new Date()).toUTCString()} Sending start command`)
+        log(`${(new Date()).toUTCString()} Sending start command`)
         await this.sendCommand(createResumeCommand())
-        console.log(`${(new Date()).toUTCString()} Reading started`)
+        log(`${(new Date()).toUTCString()} Reading started`)
       } catch (err) {
-        console.log(`ERROR: ${(new Date()).toUTCString()} Cannot write to port (on resume): ${err.message}`)
+        log(`ERROR: ${(new Date()).toUTCString()} Cannot write to port (on resume): ${err.message}`)
       }
       this._isRunning = true
     } else {
-      console.log(`${(new Date()).toUTCString()} Resume called on running device`)
+      log(`${(new Date()).toUTCString()} Resume called on running device`)
     }
   }
 
@@ -75,11 +76,11 @@ export class SdsSensor {
     return new Promise(async (resolve) => {
       if (this._isRunning) {
         try {
-          console.log(`${(new Date()).toUTCString()} Sending pause command`)
+          log(`${(new Date()).toUTCString()} Sending pause command`)
           await that.sendCommand(createPauseCommand())
-          console.log(`${(new Date()).toUTCString()} Paused`)
+          log(`${(new Date()).toUTCString()} Paused`)
         } catch (err) {
-          console.log(`ERROR: ${(new Date()).toUTCString()} Cannot write to port (on pause): ${err.message}`)
+          log(`ERROR: ${(new Date()).toUTCString()} Cannot write to port (on pause): ${err.message}`)
         }
         that._isRunning = false
       }
@@ -90,7 +91,7 @@ export class SdsSensor {
   handleCommandResponse (data) {
     if (!this._isRunning) {
       this._isRunning = true
-      console.log(`${(new Date()).toUTCString()} inactive response - ${JSON.stringify(data)}`)
+      log(`${(new Date()).toUTCString()} inactive response - ${JSON.stringify(data)}`)
     }
   }
 
@@ -131,7 +132,7 @@ export class SdsSensor {
       bufferArray.push(SerialEnd)
 
       const buffer = Buffer.from(bufferArray)
-      console.log(`${(new Date()).toUTCString()} Writing to port (data: ${JSON.stringify(bufferArray)})`)
+      log(`${(new Date()).toUTCString()} Writing to port (data: ${JSON.stringify(bufferArray)})`)
       this._port.write(buffer, (err) => {
         resolve()
         if (err) {
