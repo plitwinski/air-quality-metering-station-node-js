@@ -2,7 +2,10 @@
 export default class FakeSerialPort {
   constructor (portName, params) {
     this._isOpen = false
-    this.closeMock = jest.fn()
+    const that = this
+    this.close = jest.fn(() => {
+      that._isOpen = false
+    })
     this.portName = portName
     this.params = params
   }
@@ -18,9 +21,5 @@ export default class FakeSerialPort {
   }
   write (_, callback) {
     callback()
-  }
-  close () {
-    this.closeMock()
-    this._isOpen = false
   }
 }

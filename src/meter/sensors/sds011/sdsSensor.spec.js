@@ -62,7 +62,7 @@ describe(`When '${SdsSensor.name}'`, () => {
   describe('stops receiving data', () => {
     let sensor
     beforeAll((done) => {
-      sensor = new SdsSensor('test', 'portTest')
+      sensor = new SdsSensor(sensorName, portName)
       sensor.start(async () => {
         await sensor.stopAsync()
         done()
@@ -74,7 +74,7 @@ describe(`When '${SdsSensor.name}'`, () => {
     })
 
     it('then port has been closed', () => {
-      expect(sensor._port.closeMock).toHaveBeenCalled()
+      expect(sensor._port.close).toHaveBeenCalled()
     })
   })
 })
