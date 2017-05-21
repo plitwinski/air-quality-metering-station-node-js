@@ -28,12 +28,12 @@ class AirQualityMeter {
 
   _getResults () {
     return this._collectedReadings.map(sensorReading => {
-      const avgPM25 = sensorReading.readings.map(p => p.PM25).reduce((a, b) => a + b, 0) / sensorReading.readings.length
-      const avgPM10 = sensorReading.readings.map(p => p.PM10).reduce((a, b) => a + b, 0) / sensorReading.readings.length
+      const avgPM25 = Math.round(sensorReading.readings.map(p => p.PM25).reduce((a, b) => a + b, 0) / sensorReading.readings.length)
+      const avgPM10 = Math.round(sensorReading.readings.map(p => p.PM10).reduce((a, b) => a + b, 0) / sensorReading.readings.length)
       return {
         deviceName: sensorReading.name,
-        PM25: Math.round(avgPM25),
-        PM10: Math.round(avgPM10)
+        PM25: isNaN(avgPM25) ? -1 : avgPM25,
+        PM10: isNaN(avgPM10) ? -1 : avgPM10
       }
     })
   }

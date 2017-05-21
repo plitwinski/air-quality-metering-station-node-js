@@ -22,17 +22,6 @@ const stopServices = async (exitCode = 0) => {
   process.exit(exitCode)
 }
 
-process.on('uncaughtException', async (err) => {
-  console.log(`ERROR: ${(new Date()).toUTCString()} uncaughtException: `, err.message)
-  console.log(err.stack)
-  await stopServices(1)
-})
-
-process.on('unhandledRejection', async (reason, p) => {
-  console.log(`${(new Date()).toUTCString()} ERROR: Promise rejected: ${reason}`)
-  await stopServices(1)
-})
-
 process.stdin.on('data', async () => {
   await stopServices()
 })
