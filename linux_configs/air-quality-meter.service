@@ -1,0 +1,15 @@
+[Unit]
+Description=Air Quality Meter
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /home/pi/air-quality-meter/index.js
+Restart=always
+User=nobody
+Group=dialout
+StandardOutput=syslog               # Output to syslog
+Environment=NODE_ENV=production
+WorkingDirectory=/home/pi/air-quality-meter
+
+[Install]
+WantedBy=multi-user.target

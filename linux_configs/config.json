@@ -1,0 +1,20 @@
+{
+  "webServer":{
+    "port": 8080
+  },
+  "awsIoT": {
+    "topicName": "pm_reading",
+    "region": "eu-west-1",
+    "clientId": "199404a7-0771-46a2-b4ca-04c93b7ec229",
+    "keyPath": "/home/pi/air-quality-meter/certificates/private.pem.key",
+    "certPath": "/home/pi/air-quality-meter/certificates/certificate.pem.crt",
+    "caPath": "/home/pi/air-quality-meter/certificates/CA.crt",
+    "location": "London" 
+  },
+  "devices": [
+    {
+      "port": "/dev/ttyUSB0",
+      "name": "Sds011"
+    }
+  ]
+}
