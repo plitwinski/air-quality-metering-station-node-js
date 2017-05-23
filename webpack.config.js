@@ -10,8 +10,7 @@ var configExternals = function (context, request, callback) {
 
 module.exports = {
   entry: {
-    index: './src/index.js',
-    monitor: './src/monitor.js'
+    index: './src/index.js'
   },
   target: 'node',
   output: {

@@ -1,6 +1,5 @@
 import path from 'path'
 import awsIoT from 'aws-iot-device-sdk'
-import uuid from 'node-uuid'
 import config from '../config.json'
 
 import eventAggregator from '../events/eventAggregator'
