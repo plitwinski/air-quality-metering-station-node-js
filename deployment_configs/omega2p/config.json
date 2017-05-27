@@ -13,7 +13,7 @@
   },
   "devices": [
     {
-      "port": "/dev/ttyS1",
+      "port": "/dev/ttyUSB0",
       "name": "Sds011"
     }
   ]
