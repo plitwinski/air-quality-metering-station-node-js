@@ -1,0 +1,20 @@
+{
+  "webServer":{
+    "port": 8080
+  },
+  "awsIoT": {
+    "topicName": "pm_reading",
+    "region": "eu-west-1",
+    "clientId": "f9a78277-dbba-4d36-a3a6-558159e8bd3a",
+    "keyPath": "/aqm/certificates/private.pem.key",
+    "certPath": "/aqm/certificates/certificate.pem.crt",
+    "caPath": "/aqm/certificates/CA.crt",
+    "location": "London" 
+  },
+  "devices": [
+    {
+      "port": "/dev/ttyS1",
+      "name": "Sds011"
+    }
+  ]
+}

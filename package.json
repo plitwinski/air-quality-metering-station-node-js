@@ -4,11 +4,11 @@
   "description": "Metering station to monitor air quality",
   "dependencies": {
     "aws-iot-device-sdk": "^1.0.14",
+    "babel-runtime": "^6.23.0",
     "node-schedule": "^1.2.0",
     "serialport": "^4.0.7"
   },
   "devDependencies": {
-    "babel-runtime": "^6.23.0",
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.1",
     "babel-jest": "^20.0.0",
@@ -34,7 +34,7 @@
     "webpack-node-externals": "^1.5.4"
   },
   "scripts": {
-    "build": "node scripts/build.js --arm",
+    "build": "node scripts/build.js --omega2p",
     "test": "jest",
     "test:dev": "jest --watch",
     "debug-vsc": "node_modules/.bin/babel src --out-dir lib --source-maps && copy /Y src\\config.json lib\\config.json"

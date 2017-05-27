@@ -1,4 +1,4 @@
-import SerialPort from 'serialport'
+var SerialPort = require('serialport').SerialPort // it needs to be like this so all works on node 4.3 on Omega2
 
 import { delay } from '../../../utils/asyncHelpers'
 import { log } from '../../../utils/consoleLogger'
@@ -7,14 +7,34 @@ import { SerialStart, SerialEnd, SendByte, CommandTerminator } from './sdsConsts
 import { WorkState, DutyCycle } from './commandTypes'
 import { createResumeCommand, createPauseCommand } from './sdsCommand'
 
-export class SdsSensor {
-
-  constructor (deviceName, portName) {
-    this._port = new SerialPort(portName, { baudRate: 9600,
+const createSerialPort = (portName) => {
+  if (process.env.OMEGA2P) {
+    return new SerialPort(portName, { baudRate: 9600,
+      parity: 'none',
+      autoOpen: false,
+      dataBits: 8,
+      stopBits: 1 }, false)
+  } else {
+    return new SerialPort(portName, { baudRate: 9600,
       parity: 'none',
       autoOpen: false,
       dataBits: 8,
       stopBits: 1 })
+  }
+}
+
+const createBuffer = (bufferArray) => {
+  if (process.env.OMEGA2P) {
+    return new Buffer(bufferArray)
+  } else {
+    return Buffer.from(bufferArray)
+  }
+}
+
+export class SdsSensor {
+
+  constructor (deviceName, portName) {
+    this._port = createSerialPort(portName)
 
     this._isRunning = false
     this._deviceName = deviceName
@@ -131,7 +151,7 @@ export class SdsSensor {
       bufferArray.push(this.generateCrc(bufferArray))
       bufferArray.push(SerialEnd)
 
-      const buffer = Buffer.from(bufferArray)
+      const buffer = createBuffer(bufferArray)
       log(`${(new Date()).toUTCString()} Writing to port (data: ${JSON.stringify(bufferArray)})`)
       this._port.write(buffer, (err) => {
         resolve()
