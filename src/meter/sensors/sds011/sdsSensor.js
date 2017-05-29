@@ -1,5 +1,4 @@
-var SerialPort = require('serialport').SerialPort // it needs to be like this so all works on node 4.3 on Omega2
-
+import SerialPort from './proxySerialPort'
 import { delay } from '../../../utils/asyncHelpers'
 import { log } from '../../../utils/consoleLogger'
 

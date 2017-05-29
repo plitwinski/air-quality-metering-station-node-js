@@ -51,6 +51,11 @@ module.exports = function (isOmega2p) {
         'process.env': {
           OMEGA2P: JSON.stringify(isOmega2p)
         }
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: { warnings: false },
+        minimize: true,
+        comments: false
       })
     ]
   }
